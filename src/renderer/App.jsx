@@ -74,10 +74,6 @@ function Sidebar() {
     { path: '/queue', label: 'Queues', icon: '🔄' },
     { path: '/database', label: 'Database', icon: '🛢️' },
     { path: '/settings', label: 'Settings', icon: '⚙️' },
-    // TODO: Implement these features
-    // { path: '/routes', label: 'Routes', icon: '🛣️' },
-    // { path: '/models', label: 'Models', icon: '🗄️' },
-    // { path: '/tests', label: 'Tests', icon: '🧪' },
   ];
 
   return (
