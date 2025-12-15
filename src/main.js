@@ -410,6 +410,38 @@ function setupIPC() {
     }
   });
 
+  // Pulse (Monitoring)
+  const PulseService = require('./services/PulseService');
+  ipcMain.handle('pulse:stats', async (event, projectPath) => {
+    try {
+      console.log('[Main] IPC pulse:stats called for', projectPath);
+      const stats = await PulseService.getStats(projectPath);
+      console.log('[Main] PulseService returned:', JSON.stringify(stats));
+      return { success: true, data: stats };
+    } catch (e) {
+      console.error('[Main] PulseService error:', e);
+      return { success: false, error: e.message };
+    }
+  });
+
+  ipcMain.handle('pulse:fpm-details', async () => {
+      try {
+          const data = await PulseService.getPhpFpmDetails();
+          return { success: true, data };
+      } catch (e) {
+          return { success: false, error: e.message };
+      }
+  });
+
+  ipcMain.handle('pulse:db-details', async (event, projectPath) => {
+      try {
+          const data = await PulseService.getDatabaseDetails(projectPath);
+          return { success: true, data };
+      } catch (e) {
+          return { success: false, error: e.message };
+      }
+  });
+
 
 
   // Queue

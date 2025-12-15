@@ -37,6 +37,11 @@ contextBridge.exposeInMainWorld('api', {
   // Models
   modelsAudit: (projectPath) => ipcRenderer.invoke('models:audit', projectPath),
 
+  // Pulse (Monitoring)
+  getPulseStats: (projectPath) => ipcRenderer.invoke('pulse:stats', projectPath),
+  getPulseFpmDetails: () => ipcRenderer.invoke('pulse:fpm-details'),
+  getPulseDbDetails: (projectPath) => ipcRenderer.invoke('pulse:db-details', projectPath),
+
   // Queue
   queueStatus: (projectId) => ipcRenderer.invoke('queue:status', projectId),
   queueControl: (projectId, action, projectPath) => ipcRenderer.invoke('queue:control', projectId, action, projectPath),

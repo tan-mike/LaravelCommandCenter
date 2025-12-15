@@ -9,6 +9,7 @@ import DoctorView from './pages/DoctorView';
 import ModelsView from './pages/ModelsView';
 import QueueView from './pages/QueueView';
 import DatabaseView from './pages/DatabaseView'; // Added
+import PulseView from './pages/PulseView'; // Added
 import ProjectSelector from './components/ProjectSelector';
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
           <div className="content-area">
             <Routes>
               <Route path="/" element={<Dashboard currentProject={currentProject} />} />
+              <Route path="/pulse" element={<PulseView currentProject={currentProject} />} />
               <Route path="/macros" element={<MacrosView currentProject={currentProject} />} />
               <Route path="/logs" element={<LogsView currentProject={currentProject} />} />
               <Route path="/routes" element={<RoutesView currentProject={currentProject} />} />
@@ -63,6 +65,7 @@ function Sidebar() {
 
   const navItems = [
     { path: '/', label: 'Dashboard', icon: '🏠' },
+    { path: '/pulse', label: 'Pulse', icon: '💓' },
     { path: '/macros', label: 'Macros', icon: '⚡' },
     { path: '/logs', label: 'Logs', icon: '📋' },
     { path: '/routes', label: 'Routes', icon: '🛣️' },
