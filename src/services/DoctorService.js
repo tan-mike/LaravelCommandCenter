@@ -4,6 +4,7 @@ const path = require('path');
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const execAsync = promisify(exec);
+const ConfigService = require('./ConfigService');
 
 class DoctorService {
   /**
@@ -34,7 +35,8 @@ class DoctorService {
 
   async checkPhpVersion(cwd) {
     try {
-      const { stdout } = await execAsync('php -v', { cwd });
+      const phpPath = ConfigService.get('php.path') || 'php';
+      const { stdout } = await execAsync(`"${phpPath}" -v`, { cwd });
       const version = stdout.match(/PHP ([0-9]+\.[0-9]+\.[0-9]+)/)?.[1];
       return {
         id: 'php_version',

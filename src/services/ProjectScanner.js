@@ -4,6 +4,7 @@ const { exec } = require('child_process');
 const { promisify } = require('util');
 
 const execAsync = promisify(exec);
+const ConfigService = require('./ConfigService');
 
 class ProjectScanner {
   /**
@@ -86,7 +87,8 @@ class ProjectScanner {
    */
   static async getArtisanCommands(projectPath) {
     try {
-      const { stdout } = await execAsync('php artisan list --format=json', {
+      const phpPath = ConfigService.get('php.path') || 'php';
+      const { stdout } = await execAsync(`"${phpPath}" artisan list --format=json`, {
         cwd: projectPath,
         timeout: 10000
       });

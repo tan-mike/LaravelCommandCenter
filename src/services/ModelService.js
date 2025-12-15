@@ -3,6 +3,7 @@ const path = require('path');
 const { exec } = require('child_process');
 const { promisify } = require('util');
 const execAsync = promisify(exec);
+const ConfigService = require('./ConfigService');
 
 class ModelService {
   async runAudit(projectPath) {
@@ -105,7 +106,8 @@ echo json_encode($results);
       fs.writeFileSync(scriptPath, phpCode);
 
       // Run script
-      const { stdout, stderr } = await execAsync('php _devctl_model_audit.php', { 
+      const phpPath = ConfigService.get('php.path') || 'php';
+      const { stdout, stderr } = await execAsync(`"${phpPath}" _devctl_model_audit.php`, { 
         cwd: projectPath,
         maxBuffer: 1024 * 1024 * 10 
       });

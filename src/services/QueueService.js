@@ -3,6 +3,7 @@ const { promisify } = require('util');
 const path = require('path');
 const fs = require('fs');
 const execAsync = promisify(exec);
+const ConfigService = require('./ConfigService');
 
 class QueueService {
   constructor() {
@@ -18,7 +19,8 @@ class QueueService {
       return { success: false, error: 'Worker already running' };
     }
 
-    const worker = spawn('php', ['artisan', 'queue:work'], {
+    const phpPath = ConfigService.get('php.path') || 'php';
+    const worker = spawn(phpPath, ['artisan', 'queue:work'], {
       cwd: projectPath,
       shell: true
     });
@@ -73,7 +75,8 @@ class QueueService {
 
     try {
       fs.writeFileSync(scriptPath, phpCode);
-      const { stdout } = await execAsync('php _devctl_queue_monitor.php', { cwd: projectPath });
+      const phpPath = ConfigService.get('php.path') || 'php';
+      const { stdout } = await execAsync(`"${phpPath}" _devctl_queue_monitor.php`, { cwd: projectPath });
       try { fs.unlinkSync(scriptPath); } catch(e) {}
 
       // Parse output
@@ -98,7 +101,8 @@ class QueueService {
 
   async retryJob(projectPath, id) {
     try {
-      await execAsync(`php artisan queue:retry ${id}`, { cwd: projectPath });
+      const phpPath = ConfigService.get('php.path') || 'php';
+      await execAsync(`"${phpPath}" artisan queue:retry ${id}`, { cwd: projectPath });
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message };
@@ -107,7 +111,8 @@ class QueueService {
 
   async forgetJob(projectPath, id) {
     try {
-      await execAsync(`php artisan queue:forget ${id}`, { cwd: projectPath });
+      const phpPath = ConfigService.get('php.path') || 'php';
+      await execAsync(`"${phpPath}" artisan queue:forget ${id}`, { cwd: projectPath });
       return { success: true };
     } catch (error) {
       return { success: false, error: error.message };
@@ -116,7 +121,8 @@ class QueueService {
 
   async flushFailed(projectPath) {
     try {
-        await execAsync(`php artisan queue:flush`, { cwd: projectPath });
+        const phpPath = ConfigService.get('php.path') || 'php';
+        await execAsync(`"${phpPath}" artisan queue:flush`, { cwd: projectPath });
         return { success: true };
     } catch (error) {
         return { success: false, error: error.message };
