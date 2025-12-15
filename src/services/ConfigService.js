@@ -22,6 +22,9 @@ class ConfigService {
         app: 'vscode', // vscode, phpstorm, sublime, atom, antigravity, custom
         customPath: '', // For custom command
       },
+      php: {
+        path: '', // Custom PHP path, empty uses system default
+      },
       theme: 'dark'
     };
   }

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 function SettingsView() {
   const [settings, setSettings] = useState({
     editor: { app: 'vscode', customPath: '' },
+    php: { path: '' },
     theme: 'dark'
   });
   const [loading, setLoading] = useState(true);
@@ -30,6 +31,11 @@ function SettingsView() {
   const handleCustomPathChange = (e) => {
     const customPath = e.target.value;
     updateSetting('editor', { ...settings.editor, customPath });
+  };
+
+  const handlePhpPathChange = (e) => {
+    const path = e.target.value;
+    updateSetting('php', { ...settings.php, path });
   };
 
   const updateSetting = async (key, value) => {
@@ -85,6 +91,30 @@ function SettingsView() {
               />
             </div>
           )}
+        </div>
+      </div>
+
+      <div className="card" style={{ maxWidth: '600px', marginTop: '20px' }}>
+        <div className="card-header">
+          <h3>PHP Configuration</h3>
+        </div>
+        <div className="card-content">
+          <p className="description">
+            Specify the path to your PHP executable if it's not in the system PATH.
+          </p>
+          <div className="form-group" style={{ marginTop: '16px' }}>
+            <label>PHP Executable Path</label>
+            <input 
+              type="text" 
+              value={settings.php?.path || ''}
+              onChange={handlePhpPathChange}
+              placeholder="e.g. /usr/bin/php or /opt/homebrew/bin/php"
+              style={{ width: '100%', padding: '8px', marginTop: '4px' }}
+            />
+            <small style={{ display: 'block', marginTop: '4px', color: 'var(--text-secondary)' }}>
+              Leave empty to use system default ('php')
+            </small>
+          </div>
         </div>
       </div>
 

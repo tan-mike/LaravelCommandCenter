@@ -1,6 +1,7 @@
 const { exec, spawn } = require('child_process');
 const { promisify } = require('util');
 const execAsync = promisify(exec);
+const ConfigService = require('./ConfigService');
 
 class ArtisanBridge {
   /**
@@ -22,7 +23,8 @@ class ArtisanBridge {
     }
 
     try {
-      const fullCommand = `php artisan ${command}`;
+      const phpPath = ConfigService.get('php.path') || 'php';
+      const fullCommand = `"${phpPath}" artisan ${command}`;
       const { stdout, stderr } = await execAsync(fullCommand, {
         cwd: projectPath,
         timeout,
@@ -48,7 +50,8 @@ class ArtisanBridge {
    */
   static executeStreaming(projectPath, command, onOutput) {
     return new Promise((resolve, reject) => {
-      const child = spawn('php', ['artisan', ...command.split(' ')], {
+      const phpPath = ConfigService.get('php.path') || 'php';
+      const child = spawn(phpPath, ['artisan', ...command.split(' ')], {
         cwd: projectPath,
         shell: true
       });
