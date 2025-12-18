@@ -452,7 +452,8 @@ function setupIPC() {
   ipcMain.handle('queue:control', (event, projectId, action, projectPath) => {
     if (action === 'start') {
       return queueService.startWorker(projectId, projectPath, (output) => {
-        mainWindow.webContents.send('queue:output', output);
+        console.log(`[Main] Sending queue output for project ${projectId}`);
+        mainWindow.webContents.send('queue:output', { projectId, output });
       });
     } else {
       return queueService.stopWorker(projectId);

@@ -21,8 +21,7 @@ class QueueService {
 
     const phpPath = ConfigService.get('php.path') || 'php';
     const worker = spawn(phpPath, ['artisan', 'queue:work'], {
-      cwd: projectPath,
-      shell: true
+      cwd: projectPath
     });
 
     worker.stdout.on('data', (data) => {

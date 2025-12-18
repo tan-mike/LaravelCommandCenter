@@ -13,11 +13,20 @@ function QueueView({ currentProject }) {
       loadFailedJobs();
       
       const removeListener = window.api.onQueueOutput((data) => {
-        setOutput(prev => [...prev.slice(-100), data]); // Keep last 100 lines
+        console.log('[QueueView] Received output:', data);
+        console.log('[QueueView] Current Project ID:', currentProject.id, typeof currentProject.id);
+        if (data.projectId) console.log('[QueueView] Data Project ID:', data.projectId, typeof data.projectId);
+
+        if (data.projectId && data.projectId !== currentProject.id) {
+            console.log('[QueueView] ID mismatch, ignoring.');
+            return;
+        }
+        const text = data.output || data; 
+        setOutput(prev => [...prev.slice(-100), text]); 
       });
 
       return () => {
-        // window.api.removeListener('queue:output') - if we implemented it
+        removeListener();
       };
     }
   }, [currentProject]);
@@ -87,7 +96,7 @@ function QueueView({ currentProject }) {
   }
 
   return (
-    <div className="view-container">
+    <div className="view-container" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div className="view-header">
         <h1>Queue Management</h1>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -104,7 +113,7 @@ function QueueView({ currentProject }) {
         </div>
       </div>
 
-      <div style={{ display: 'flex', gap: '20px', height: '100%', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', gap: '20px', flex: 1, overflow: 'hidden' }}>
           
           {/* Main Area: Failed Jobs */}
           <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '20px' }}>
@@ -159,9 +168,9 @@ function QueueView({ currentProject }) {
               </div>
 
               {/* Console Output */}
-              <div className="card" style={{ height: '200px', display: 'flex', flexDirection: 'column' }}>
+              <div className="card" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                   <div className="card-header"><h3>Worker Output</h3></div>
-                  <div className="output-console" style={{ flex: 1, overflowY: 'auto' }}>
+                  <div className="output-console" style={{ flex: 1, overflowY: 'auto', maxHeight: 'none' }}>
                       {output.map((line, i) => (
                           <div key={i}>{line}</div>
                       ))}

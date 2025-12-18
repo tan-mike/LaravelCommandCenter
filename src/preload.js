@@ -60,7 +60,11 @@ contextBridge.exposeInMainWorld('api', {
 
   // Events
   onLogUpdate: (callback) => ipcRenderer.on('log-entry', (event, entry) => callback(entry)),
-  onQueueOutput: (callback) => ipcRenderer.on('queue:output', (event, output) => callback(output)),
+  onQueueOutput: (callback) => {
+    const listener = (event, output) => callback(output);
+    ipcRenderer.on('queue:output', listener);
+    return () => ipcRenderer.removeListener('queue:output', listener);
+  },
   onErrorIndexed: (callback) => ipcRenderer.on('error-indexed', (event, result) => callback(result)),
 
   // Update events
